@@ -1,28 +1,23 @@
-import express from 'express';  // ES module syntax
-import { createANote, getAllNotes, updateANote, deleteANote } from '../controllers/notesController.js'; // Importing the controller functions
+import express from 'express';
+import { 
+  getAllNotes, 
+  createANote, 
+  updateANote, 
+  deleteANote 
+} from '../controllers/notesController.js';
 
 const router = express.Router();
 
-router.get("/", getAllNotes);
+// GET /api/notes - Get all notes
+router.get('/', getAllNotes);
 
-router.post("/", createANote);
+// POST /api/notes - Create a new note
+router.post('/', createANote);
 
-router.put("/:id", updateANote);
+// PUT /api/notes/:id - Update a note by ID
+router.put('/:id', updateANote);
 
-router.delete("/:id", deleteANote);
+// DELETE /api/notes/:id - Delete a note by ID
+router.delete('/:id', deleteANote);
 
 export default router;
-
-
-/*app.post('/api/notes', (req, res) => {
-  res.status(200).send('Notes created!');
-});
-
-app.put('/api/notes/:id', (req, res) => {
-  res.status(200).send('Notes updated!');
-});
-
-app.delete('/api/notes/:id', (req, res) => {
-  res.status(200).send('Notes deleted!');
-});
-*/
