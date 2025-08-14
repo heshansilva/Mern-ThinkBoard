@@ -25,7 +25,7 @@ export async function getAllNotesByID(req, res) {
 
 export async function createANote(req, res) {
   try {
-    const { title, content } = req.body; // Destructuring title and content from the request body
+    const { title, content } = req.body; // Destructuring title and content from the request body and *server.js:- app.use(express.json()); middleware handles JSON parsing*
     const note = new Note({ title, content }); // Creating a new note instance with the request body
     const saveNote = await note.save();
     res.status(201).json(saveNote); // Sending the created note as a response 

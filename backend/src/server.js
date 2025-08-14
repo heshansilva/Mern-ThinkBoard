@@ -9,8 +9,6 @@ dotenv.config();// Loading environment variables from .env file
 // Initialize the express application
 const app = express();
 
-// Connect to MongoDB
-connectDb();
 
 const PORT = process.env.PORT || 5003;
 
@@ -27,9 +25,12 @@ app.use(rateLimiter); // Applying rate limiting middleware
 // Routes
 app.use("/api/notes", notesRoutes);
 
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+// Connect to MongoDB
+connectDb().then(() => {
+  const server = app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+
 
 
 // Error handling for server. this is extra part 
@@ -42,6 +43,7 @@ server.on('error', (err) => {
   } else {
     console.error('Server error:', err);
   }
+});
 });
 
 //mongodb+srv://achinthaheshan2:KM3XSdTIJUW8BBlS@cluster0.gy4kddd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
