@@ -1,6 +1,7 @@
 import express from 'express';
 import { 
   getAllNotes, 
+  getAllNotesByID,
   createANote, 
   updateANote, 
   deleteANote 
@@ -10,6 +11,8 @@ const router = express.Router();
 
 // GET /api/notes - Get all notes
 router.get('/', getAllNotes);
+
+router.get('/:id', getAllNotesByID);
 
 // POST /api/notes - Create a new note
 router.post('/', createANote);
