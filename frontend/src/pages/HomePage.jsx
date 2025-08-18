@@ -1,11 +1,10 @@
 import React from 'react'
+import Navbar from '../component/navbar.jsx';
 
 const HomePage = () => {
   return (
-    <div>
-      
-      <h1>Home Page</h1>
-      <p>Welcome to the notes app!</p>
+    <div className="min-h-screen">
+      <Navbar />
     </div>
   )
 }
