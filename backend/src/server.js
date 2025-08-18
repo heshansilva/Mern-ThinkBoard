@@ -27,6 +27,7 @@ app.use("/api/notes", notesRoutes);
 
 // Connect to MongoDB
 connectDb().then(() => {
+  // Start the server after successful database connection
   const server = app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
   });
