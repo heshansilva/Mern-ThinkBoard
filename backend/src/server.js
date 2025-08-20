@@ -1,8 +1,11 @@
 import express from 'express';  // ES module syntax 
+import dotenv from 'dotenv'; // hide your MongoDB username and password using environment variables (.env)
+import cors from 'cors'; // Importing CORS middleware for handling cross-origin requests
+
 import notesRoutes from './routes/notesRoutes.js'; // Importing the notes routes
 import { connectDb } from './config/db.js'; // Importing the database connection function
-import dotenv from 'dotenv'; // hide your MongoDB username and password using environment variables (.env)
-import rateLimiter from './middleware/rateLimiter.js';
+import rateLimiter from './middleware/rateLimiter.js'; 
+
 
 dotenv.config();// Loading environment variables from .env file
 
@@ -13,8 +16,12 @@ const app = express();
 const PORT = process.env.PORT || 5003;
 
 // Middleware to parse JSON requests and " use " method to add middleware
+app.use(cors({
+  origin: "http://localhost:5173"
+})); // Enable CORS for all routes
 app.use(express.json()); /// this Middleware used to when request body is JSON before the response
 app.use(rateLimiter); // Applying rate limiting middleware
+
 
 //our simple middleware
 // app.use((req, res, next) => { 
