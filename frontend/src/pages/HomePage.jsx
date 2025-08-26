@@ -1,9 +1,10 @@
 import {useEffect, useState} from 'react'
 import Navbar from '../component/navbar.jsx';
 import RateLimitedUI from '../component/rateLimitedUi.jsx';
-import axios from 'axios';
+import api from '../lib/axios.js';
 import toast from 'react-hot-toast';
 import NoteCard from '../component/NoteCard.jsx';
+import NotesNotFound from '../component/NotesNotFound.jsx';
 
 const HomePage = () => {
   const [isRatelimited, setIsRatelimited] = useState(false); // Example state to simulate rate limiting
@@ -13,7 +14,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchNotesData = async () => {
       try {
-        const res = await axios.get('http://localhost:5003/api/notes'); // Adjust the API endpoint as needed
+        const res = await api.get('/notes'); // Adjust the API endpoint as needed
         const data = res.data; //update our notes state
         setNotes(data);
         setIsRatelimited(false);
@@ -43,6 +44,9 @@ const HomePage = () => {
       {/* Loading and error states */}
       <div className="max-w-7xl mx-auto p-4 mt-6">
         {loading && <div className="text-center text-primary py-10">Loading notes...</div>}
+
+        {/* No notes available message */}
+        {notes.length === 0 && !loading && !isRatelimited && <NotesNotFound />}
 
         {/*show notes*/}
         {notes.length > 0 && !isRatelimited && (

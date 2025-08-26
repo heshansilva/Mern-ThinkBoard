@@ -1,23 +1,53 @@
-import { ArrowLeftIcon } from 'lucide-react';
+import { AppWindowIcon, ArrowLeftIcon } from 'lucide-react';
 import React from 'react'
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import api from '../lib/axios.js';
 
 const CreatePage = () => {
   const [title,setTitle] = useState("");
   const [content,setContent] = useState("");
   const [loading,setLoading] = useState(false);
 
+  const navigator = useNavigate();
+
   
-  const handleSubmit = (e) => {
-    e.preventDefault();
-   
-    if(!title.trim() || !content.trim()){
-      toast.error("All field are required");
+  const handleSubmit = async (e) => {
+    e.preventDefault(); //stop the page from refreshing
+
+   //If title or content are empty → show a toast message (“All fields are required”).
+    if(!title.trim() || !content.trim()){ 
+       toast.error("All fields are required");
       return;
   }
+
+  //Start loading
+  setLoading(true);
+  try {
+    await api.post("/notes", {
+      title,
+      content
+    })
+    toast.success("Note created successfully");
+    navigator("/"); //redirect to home page
+  } catch (error) {
+    console.log("error creating note:", error);
+    if(error.response.status === 429) {
+      toast.error("Slow down! You're creating notes too quickly.",{
+        duration: 4000,
+        position: "top-center",
+        icon: "☠️"
+      });
+    } else {
+      toast.error("Failed to create note");
+    }
+  }
+  finally {
+    setLoading(false);
 }
+  }
 
 
   return (

@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5003;
 
 // Middleware to parse JSON requests and " use " method to add middleware
 app.use(cors({
-  origin: "http://localhost:5173"
+  origin: ["http://localhost:5173", "http://localhost:5174"]
 })); // Enable CORS for all routes
 app.use(express.json()); /// this Middleware used to when request body is JSON before the response
 app.use(rateLimiter); // Applying rate limiting middleware
