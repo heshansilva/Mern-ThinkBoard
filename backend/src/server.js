@@ -1,6 +1,7 @@
 import express from 'express';  // ES module syntax 
 import dotenv from 'dotenv'; // hide your MongoDB username and password using environment variables (.env)
 import cors from 'cors'; // Importing CORS middleware for handling cross-origin requests
+import path from 'path';
 
 import notesRoutes from './routes/notesRoutes.js'; // Importing the notes routes
 import { connectDb } from './config/db.js'; // Importing the database connection function
@@ -11,14 +12,24 @@ dotenv.config();// Loading environment variables from .env file
 
 // Initialize the express application
 const app = express();
-
-
 const PORT = process.env.PORT || 5003;
+const __dirname = path.resolve();
+
+
 
 // Middleware to parse JSON requests and " use " method to add middleware
-app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174"]
-})); // Enable CORS for all routes
+// app.use(cors({
+//   origin: ["http://localhost:5173", "http://localhost:5174"]
+// })); // Enable CORS for all routes
+
+if (process.env.NODE_ENV !== "production") {
+  app.use(
+    cors({
+       origin: ["http://localhost:5173", "http://localhost:5174"]
+    })
+  );
+}
+
 app.use(express.json()); /// this Middleware used to when request body is JSON before the response
 app.use(rateLimiter); // Applying rate limiting middleware
 
@@ -31,6 +42,15 @@ app.use(rateLimiter); // Applying rate limiting middleware
 
 // Routes
 app.use("/api/notes", notesRoutes);
+
+// Serve static files from the frontend build directory
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+  });
+}
 
 // Connect to MongoDB
 connectDb().then(() => {
